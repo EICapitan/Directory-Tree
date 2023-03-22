@@ -1,5 +1,5 @@
 // by ElCapitan 
-// atdt-032220231033
+// atdt-032220231037
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -52,6 +52,7 @@ class Path
     {
       const fs::path path(*it);
       string ON_COLOR;
+      string ADD;
       string pa = *it;
       struct stat st;
       stat(pa.c_str(), &st);
@@ -63,6 +64,7 @@ class Path
       else if ((st.st_mode & S_IEXEC) != 0)
       {
         ON_COLOR = G_COLOR;
+        ADD = "*";
       }
       
 
@@ -86,10 +88,10 @@ class Path
 
       if (it == --this->context.end())
       {
-        cout << "  └ " << ON_COLOR << *it << DEF_COLOR << endl;
+        cout << "  └ " << ON_COLOR << *it << DEF_COLOR << ADD << endl;
         continue;
       }
-      cout << "  ├ " << ON_COLOR << *it << DEF_COLOR << endl;
+      cout << "  ├ " << ON_COLOR << *it << DEF_COLOR << ADD << endl;
     }
   }
 
