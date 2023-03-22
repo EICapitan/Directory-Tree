@@ -1,9 +1,10 @@
 // by ElCapitan 
-// atdt-032220230951
+// atdt-032220231033
 #include <filesystem>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sys/stat.h>
 #include <map>
 #include <bits/stdc++.h>
 
@@ -20,15 +21,15 @@ class Path
   string name;
   string path;
   bool all;
-  short page;
+  bool noColor;
 
   //std::vector<std::vector<string>> context;
   std::vector<string> context;
 
-  Path(short page, string path, bool argv[]) {
+  Path(string path, bool argv[]) {
     this->path = path;
-    this->page = page;
     this->all = argv[0];
+    this->noColor = argv[1];
     auto const pos = path.find_last_of('/');
     this->name = path.substr(pos + 1);
 
@@ -37,24 +38,34 @@ class Path
 
   void displayPath() 
   {
-    if (this->page == 0) 
-    {
-      for (short x = 0; x != this->page; ++x) {
-        cout << "\t";
-      }
-      cout << "/" << this->name << endl;
-    } 
-    else 
-    {
-      for (short x = 0; x != this->page; ++x) {
-        cout << "\t";
-      }
+    string const B_COLOR = "\u001b[34;1m";
+    string const G_COLOR = "\u001b[32;1m";
+    string const DEF_COLOR = "\u001b[39;0m";
 
-      cout << "\t└ /" << this->name << "/" << endl;
+    if (this->context.size() == 0) {
+      return;
     }
+
+    cout << this->name << "/\n";
 
     for (auto it = this->context.begin(); it != this->context.end(); ++it) 
     {
+      const fs::path path(*it);
+      string ON_COLOR;
+      string pa = *it;
+      struct stat st;
+      stat(pa.c_str(), &st);
+
+      if (fs::is_directory(path)) 
+      {
+        ON_COLOR = B_COLOR;
+      }
+      else if ((st.st_mode & S_IEXEC) != 0)
+      {
+        ON_COLOR = G_COLOR;
+      }
+      
+
       if (not this->all) {
         string word = *it;
         if (word[0] == '.') {
@@ -62,18 +73,23 @@ class Path
         }
       }
 
-      if (it == --this->context.end())
+      if (this->noColor) 
       {
-        for (short x = 0; x != this->page + 1; ++x) {
-          cout << " ";
+        if (it == --this->context.end())
+        {
+          cout << "  └ " << *it << endl;
+          continue;
         }
-        cout << "  └ " << *it << endl;
+        cout << "  ├ " << *it << endl;
         continue;
       }
-      for (short x = 0; x != this->page + 1; ++x) {
-        cout << " ";
+
+      if (it == --this->context.end())
+      {
+        cout << "  └ " << ON_COLOR << *it << DEF_COLOR << endl;
+        continue;
       }
-      cout << "  ├ " << *it << endl;
+      cout << "  ├ " << ON_COLOR << *it << DEF_COLOR << endl;
     }
   }
 
@@ -126,10 +142,12 @@ string getInput(string PS1)
 }
 
 int main(int argc, char *argv[]) {
-  bool arguments[] = { false };
+  bool arguments[] = { false, false };
   std::map<string, int> trace;
   trace["--all"] = 1;
   trace["-a"] = 1;
+  trace["--no-color"] = 2;
+  trace["-nc"] = 2;
 
   for (char **pargv = argv+1; *pargv != argv[argc]; ++pargv) {
     switch (trace[*pargv])
@@ -137,14 +155,15 @@ int main(int argc, char *argv[]) {
     case 1:
       arguments[0] = true;
       break;
-    
-    default:
+
+    case 2:
+      arguments[1] = true;
       break;
     }
   }
 
   string currentDir = fs::current_path();
-  Path current(0, currentDir, arguments);
+  Path current(currentDir, arguments);
   current.displayPath();
   return 0;
 }
