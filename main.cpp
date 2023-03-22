@@ -1,5 +1,5 @@
 // by ElCapitan 
-// atdt-032220230950
+// atdt-032220230951
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -129,6 +129,7 @@ int main(int argc, char *argv[]) {
   bool arguments[] = { false };
   std::map<string, int> trace;
   trace["--all"] = 1;
+  trace["-a"] = 1;
 
   for (char **pargv = argv+1; *pargv != argv[argc]; ++pargv) {
     switch (trace[*pargv])
