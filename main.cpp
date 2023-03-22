@@ -1,5 +1,5 @@
 // by ElCapitan 
-// atdt-032220230755
+// atdt-032220230950
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -19,14 +19,16 @@ class Path
   public:
   string name;
   string path;
+  bool all;
   short page;
 
   //std::vector<std::vector<string>> context;
   std::vector<string> context;
 
-  Path(short page, string path) {
+  Path(short page, string path, bool argv[]) {
     this->path = path;
     this->page = page;
+    this->all = argv[0];
     auto const pos = path.find_last_of('/');
     this->name = path.substr(pos + 1);
 
@@ -53,7 +55,13 @@ class Path
 
     for (auto it = this->context.begin(); it != this->context.end(); ++it) 
     {
-      //std::vector<string> ctx = *it;
+      if (not this->all) {
+        string word = *it;
+        if (word[0] == '.') {
+          continue;
+        }
+      }
+
       if (it == --this->context.end())
       {
         for (short x = 0; x != this->page + 1; ++x) {
@@ -117,15 +125,25 @@ string getInput(string PS1)
   return inp;
 }
 
-enum Commands 
-{
-  ls,
-  quit
-};
+int main(int argc, char *argv[]) {
+  bool arguments[] = { false };
+  std::map<string, int> trace;
+  trace["--all"] = 1;
 
-int main() {
+  for (char **pargv = argv+1; *pargv != argv[argc]; ++pargv) {
+    switch (trace[*pargv])
+    {
+    case 1:
+      arguments[0] = true;
+      break;
+    
+    default:
+      break;
+    }
+  }
+
   string currentDir = fs::current_path();
-  Path current(0, currentDir);
+  Path current(0, currentDir, arguments);
   current.displayPath();
   return 0;
 }
