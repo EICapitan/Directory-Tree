@@ -1,4 +1,4 @@
-// by ElCapitan 
+// by ElCapitan; AT PROJECT Limited
 // ver. atdt-1.1.0
 #include <filesystem>
 #include <iostream>
@@ -23,7 +23,6 @@ class Path
   bool all;
   bool noColor;
 
-  //std::vector<std::vector<string>> context;
   std::vector<std::vector<string>> context;
 
   Path(string path, bool argv[]) {
