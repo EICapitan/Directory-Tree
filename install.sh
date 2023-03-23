@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 echo "AT PROJECT Limited 2023"
-echo "DirectoryTree Show ver. atdt-1.1.0"
+echo "DirectoryTree Show ver. atdt-1.1.1"
 
 REQUIRE="cmake make"
 perm=${1:-"perm"}

@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.1.0
+// ver. atdt-1.1.1
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -82,7 +82,7 @@ class Path
         ADD = "*";
       }
 
-      if (item[0].size() < 12) 
+      if (item[0].size() < 11) 
       {
         T = "\t\t\t";
       } 
@@ -108,22 +108,22 @@ class Path
       {
         if (it == --this->context.end())
         {
-          cout << "  └ " << item[0] << ADD << T << item[1] << "\t\t"; 
+          cout << "  └ " << item[0] << "/" << ADD << T << item[1] << "\t\t"; 
           cout << item[2] << endl;
           continue;
         }
-        cout << "  ├ " << item[0] << ADD << T << item[1] << "\t\t"; 
+        cout << "  ├ " << item[0] << "/" << ADD << T << item[1] << "\t\t"; 
         cout << item[2] << endl;
         continue;
       }
 
       if (it == --this->context.end())
       {
-        cout << "  └ " << ON_COLOR << item[0] << DEF_COLOR << ADD << T << item[1] << "\t\t"; 
+        cout << "  └ " << ON_COLOR << item[0] << DEF_COLOR << "/" << ADD << T << item[1] << "\t\t"; 
         cout << item[2] << endl;
         continue;
       }
-      cout << "  ├ " << ON_COLOR << item[0] << DEF_COLOR << ADD << T << item[1] << "\t\t";
+      cout << "  ├ " << ON_COLOR << item[0] << DEF_COLOR << "/"  << ADD << T << item[1] << "\t\t";
       cout << item[2] << endl;
     }
   }
@@ -213,7 +213,7 @@ class Path
       RemoveWord(this->path + "/", pathPart);
 
       if (entry.is_directory()) {
-        std::vector<string> ctx = { pathPart + "/", "DIR", "\t -"};
+        std::vector<string> ctx = {pathPart, "DIR", "\t -"};
         this->context.push_back(ctx);
         continue;
       }
