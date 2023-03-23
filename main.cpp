@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.2.0
+// ver. atdt-1.2.1
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -125,14 +125,6 @@ class Path
       {
         item[0] = this->truncate(item[0], 20);
         *T = "\t";
-      }
-
-
-      if (not this->all) {
-        string word = item[0];
-        if (word[0] == '.') {
-          continue;
-        }
       }
 
       string additional;
@@ -271,6 +263,12 @@ class Path
 
       RemoveWord(this->path + "/", pathPart);
 
+      if (not this->all) {
+        if (pathPart[0] == '.') {
+          continue;
+        }
+      }
+
       if (entry.is_directory()) {
         std::vector<string> ctx = {pathPart + "/", "DIR", "\t -"};
         this->context.push_back(ctx);
@@ -319,6 +317,9 @@ int main(int argc, char *argv[]) {
       break;
 
     default:
+      if (*pargv[0] != '-') {
+        break;
+      }
       string argm = *pargv;
 
       for (auto x: argm) {
