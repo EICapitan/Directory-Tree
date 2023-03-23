@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+echo "DirectoryTree Show ver. atdt-1.0.0"
 
 REQUIRE="cmake make"
 perm=${1:-"perm"}

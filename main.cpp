@@ -1,5 +1,5 @@
 // by ElCapitan 
-// atdt-032220231047
+// ver. atdt-1.0.0
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -24,7 +24,7 @@ class Path
   bool noColor;
 
   //std::vector<std::vector<string>> context;
-  std::vector<string> context;
+  std::vector<std::vector<string>> context;
 
   Path(string path, bool argv[]) {
     this->path = path;
@@ -46,14 +46,16 @@ class Path
       return;
     }
 
-    cout << this->name << "/\n";
+    cout << this->name << "/\t\t\t\tTYPE\t\t   SIZE\n  │\n";
 
     for (auto it = this->context.begin(); it != this->context.end(); ++it) 
     {
-      const fs::path path(*it);
+      std::vector<string> item = *it;
+      const fs::path path(item[0]);
       string ON_COLOR;
       string ADD;
-      string pa = *it;
+      string T;
+      string pa = item[0];
       struct stat st;
       stat(pa.c_str(), &st);
 
@@ -66,42 +68,100 @@ class Path
         ON_COLOR = G_COLOR;
         ADD = "*";
       }
-      
+
+      if (item[0].size() < 12) 
+      {
+        T = "\t\t\t";
+      } 
+      else 
+      {
+        T = "\t\t";
+      }
+
 
       if (not this->all) {
-        string word = *it;
+        string word = item[0];
         if (word[0] == '.') {
           continue;
         }
       }
 
+      /*
       if (this->noColor) 
       {
         if (it == --this->context.end())
         {
-          cout << "  └ " << *it << endl;
+          cout << "  └ " << item[0] << ADD << T << "[" << TYPE << "]" << endl;
           continue;
         }
-        cout << "  ├ " << *it << endl;
+        cout << "  ├ " << item[0] << ADD << T << "[" << TYPE << "]" << endl;
         continue;
-      }
+      }*/
 
       if (it == --this->context.end())
       {
-        cout << "  └ " << ON_COLOR << *it << DEF_COLOR << ADD << endl;
+        cout << "  └ " << ON_COLOR << item[0] << DEF_COLOR << ADD << T << item[1] << "\t\t"; 
+        cout << item[2] << endl;
         continue;
       }
-      cout << "  ├ " << ON_COLOR << *it << DEF_COLOR << ADD << endl;
+      cout << "  ├ " << ON_COLOR << item[0] << DEF_COLOR << ADD << T << item[1] << "\t\t";
+      cout << item[2] << endl;
     }
   }
 
   private:
-  static bool mycomp(string a, string b){
-	  return a<b;
+  string removeZeros(string s) {
+    for (int i = s.size() - 1; i >= 1; i--) {
+      if (s.at(i) == '0') {
+        s.pop_back();
+      } else if (s.at(i) == '.') {
+          s.pop_back();
+          break;
+      } else {
+          break; 
+      }
+    }
+    return s;
   }
 
-  static void alphabaticallySort(std::vector<string> &a){
-    int n=a.size();
+  double roundOff(double n) {
+    double d = n * 100.0;
+    int i = d + 0.5;
+    d = (float)i / 100.0;
+    return d;
+  }
+
+  string convertSize(size_t size) {              
+    static const char *SIZES[] = { " B", "KB", "MB", "GB" };
+    int div = 0;
+    size_t rem = 0;
+
+    while (size >= 1024 && div < (sizeof SIZES / sizeof *SIZES)) {
+        rem = (size % 1024);
+        div++;
+        size /= 1024;
+    }
+
+    double size_d = (float)size + (float)rem / 1024.0;
+    string result = removeZeros(std::to_string(roundOff(size_d))) + "\t" + SIZES[div];
+    return result;
+  }
+
+  int file_size(const char *path) {
+    struct stat results;
+
+    if (stat(path, &results) == 0) {
+        return results.st_size;
+    } else {
+        return -1;
+    }
+  }
+
+  static bool mycomp(std::vector<string> a, std::vector<string> b){
+	  return a[0]<b[0];
+  }
+
+  static void alphaSort(std::vector<std::vector<string>> &a){
     sort(a.begin(),a.end(),mycomp);
   }
   
@@ -124,14 +184,15 @@ class Path
       RemoveWord(this->path + "/", pathPart);
 
       if (entry.is_directory()) {
-        //std::vector<string> ctx = { pathPart + "/", "dir" };
-        this->context.push_back(pathPart + "/");
+        std::vector<string> ctx = { pathPart + "/", "DIR", "-"};
+        this->context.push_back(ctx);
         continue;
       }
-      //std::vector<string> ctx = {pathPart, "file"};
-      this->context.push_back(pathPart);
+      string size = convertSize(entry.file_size());
+      std::vector<string> ctx = {pathPart, "FILE", size};
+      this->context.push_back(ctx);
     }
-    alphabaticallySort(this->context);
+    alphaSort(this->context);
   }
 };
 
@@ -144,6 +205,7 @@ string getInput(string PS1)
 }
 
 int main(int argc, char *argv[]) {
+  const double x = 0.33, y = 42.3748;
   bool arguments[] = { false, false };
   std::map<string, int> trace;
   trace["--all"] = 1;
