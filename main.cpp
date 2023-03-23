@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.2.0
+// ver. dev-atdt-032320231634
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -15,7 +15,7 @@ using std::cout;
 using std::endl;
 using std::string;
 
-class Path 
+class Path
 {
   public:
   string name;
@@ -39,7 +39,7 @@ class Path
     getContext(path);
   }
 
-  void displayPath() 
+  void displayPath()
   {
     string const B_COLOR = "\u001b[34;1m";
     string const G_COLOR = "\u001b[32;1m";
@@ -58,7 +58,7 @@ class Path
     {
       *TZ = this->name + "/\t\t\t";
     }
-    else 
+    else
     {
       *TZ = this->truncate(this->name, 20) + "/\t\t";
     }
@@ -74,16 +74,17 @@ class Path
     }
 
     cout << *TZ << "TYPE\t" << optional << "\n  │\n";
-    
+
     delete(TZ);
 
-    for (auto it = this->context.begin(); it != this->context.end(); ++it) 
+    for (auto it = this->context.begin(); it != this->context.end(); ++it)
     {
       std::vector<string> item = *it;
       char *mode = (char*)malloc(sizeof(char) * 9 + 1);
       const fs::path path(item[0]);
       string *ON_COLOR = new string;
       string *ADD = new string;
+      int ad = 0;
       string *T = new string;
       string pa = item[0];
       struct stat st;
@@ -100,7 +101,7 @@ class Path
         mode[8] = (perm & S_IXOTH) ? 'x' : '-';
       }
 
-      if (fs::is_directory(path)) 
+      if (st.st_mode & S_IFDIR)
       {
         *ON_COLOR = B_COLOR;
       }
@@ -108,16 +109,17 @@ class Path
       {
         *ON_COLOR = G_COLOR;
         *ADD = "*";
+        ad = 1;
       }
 
-      if (item[0].size() < 4) {
+      if (item[0].size() + ad < 4) {
         *T = "\t\t\t\t";
       }
-      else if (item[0].size() < 12) 
+      else if (item[0].size() + ad < 12)
       {
         *T = "\t\t\t";
-      } 
-      else if (item[0].size() < 20) 
+      }
+      else if (item[0].size() + ad < 20)
       {
         *T = "\t\t";
       }
@@ -125,14 +127,6 @@ class Path
       {
         item[0] = this->truncate(item[0], 20);
         *T = "\t";
-      }
-
-
-      if (not this->all) {
-        string word = item[0];
-        if (word[0] == '.') {
-          continue;
-        }
       }
 
       string additional;
@@ -145,22 +139,22 @@ class Path
         additional = additional + "\t " + mode[0] + mode[1] + mode[2] + "\t " + mode[3] + mode[4] + mode[5] + "\t " + mode[6] + mode[7] + mode[8] ;
       }
 
-      if (this->noColor) 
+      if (this->noColor)
       {
         if (it == --this->context.end())
         {
-          cout << "  └ " << item[0] << *ADD << *T << item[1] << "\t"; 
+          cout << "  └ " << item[0] << *ADD << *T << item[1] << "\t";
           cout << additional << endl;
           continue;
         }
-        cout << "  ├ " << item[0] << *ADD << *T << item[1] << "\t"; 
+        cout << "  ├ " << item[0] << *ADD << *T << item[1] << "\t";
         cout << additional << endl;
         continue;
       }
 
       if (it == --this->context.end())
       {
-        cout << "  └ " << *ON_COLOR << item[0] << DEF_COLOR << *ADD << *T << item[1] << "\t"; 
+        cout << "  └ " << *ON_COLOR << item[0] << DEF_COLOR << *ADD << *T << item[1] << "\t";
         cout << additional << endl;
         continue;
       }
@@ -199,7 +193,7 @@ class Path
           s.pop_back();
           break;
       } else {
-          break; 
+          break;
       }
     }
     return s;
@@ -212,7 +206,7 @@ class Path
     return d;
   }
 
-  string convertSize(size_t size, bool t = true) {              
+  string convertSize(size_t size, bool t = true) {
     static const char *SIZES[] = { " B", "KB", "MB", "GB" };
     int div = 0;
     size_t rem = 0;
@@ -251,8 +245,8 @@ class Path
   static void alphaSort(std::vector<std::vector<string>> &a){
     sort(a.begin(),a.end(),mycomp);
   }
-  
-  static void RemoveWord(string word, string &line) 
+
+  static void RemoveWord(string word, string &line)
   {
     auto n = line.find(word);
 
@@ -262,14 +256,20 @@ class Path
     }
   }
 
-  void getContext(string path) 
+  void getContext(string path)
   {
     size_t fsize = 0;
-    for (const auto & entry : fs::directory_iterator(path)) 
+    for (const auto & entry : fs::directory_iterator(path))
     {
       string pathPart = entry.path();
 
       RemoveWord(this->path + "/", pathPart);
+
+      if (not this->all) {
+        if (pathPart[0] == '.') {
+          continue;
+        }
+      }
 
       if (entry.is_directory()) {
         std::vector<string> ctx = {pathPart + "/", "DIR", "\t -"};
@@ -287,17 +287,17 @@ class Path
 };
 
 int main(int argc, char *argv[]) {
-  const double x = 0.33, y = 42.3748;
+  string currentDir = fs::current_path();
   bool arguments[] = { false, false, false, false };
   std::map<string, int> trace;
   trace["--all"] = 1;
-  trace["a"] = 1;
+  trace["-a"] = 1;
   trace["--no-color"] = 2;
-  trace["n"] = 2;
+  trace["-n"] = 2;
   trace["--size"] = 3;
-  trace["s"] = 3;
+  trace["-s"] = 3;
   trace["--access"] = 4;
-  trace["A"] = 4;
+  trace["-A"] = 4;
 
   for (char **pargv = argv+1; *pargv != argv[argc]; ++pargv) {
     switch (trace[*pargv])
@@ -319,11 +319,31 @@ int main(int argc, char *argv[]) {
       break;
 
     default:
+      if (*pargv[0] != '-') {
+        try {
+          if (not *pargv[0] == '/') {
+            currentDir += "/";
+            currentDir += fs::path(*pargv);
+          } else {
+            currentDir = fs::path(*pargv);
+          }
+
+          if (currentDir.back() == '/' and currentDir.length() > 1) {
+              currentDir.pop_back();
+            }
+        } catch (string err) {
+          cout << "Folder can't be opened. Error: " << err << endl;
+          return 0;
+        }
+
+        break;
+      }
+
       string argm = *pargv;
 
       for (auto x: argm) {
         string arg (1, x);
-        switch (trace[arg])
+        switch (trace["-" + arg])
         {
         case 1:
           arguments[0] = true;
@@ -345,7 +365,6 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  string currentDir = fs::current_path();
   Path current(currentDir, arguments);
   current.displayPath();
   return 0;
