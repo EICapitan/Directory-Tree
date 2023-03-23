@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.1.1
+// ver. atdt-1.1.2
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -131,11 +131,15 @@ class Path
   private:
   string truncate(std::string str, size_t width, bool show_ellipsis=true)
   {
-    if (str.length() > width)
-        if (show_ellipsis)
-            return str.substr(0, width) + "...";
-        else
-            return str.substr(0, width);
+    if (str.length() > width) {
+      if (show_ellipsis) {
+          return str.substr(0, width) + "...";
+      }
+      else
+      {
+        return str.substr(0, width);
+      }
+    }
     return str;
   }
 
