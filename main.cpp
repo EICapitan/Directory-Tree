@@ -1,5 +1,5 @@
 // by ElCapitan 
-// ver. atdt-1.0.0
+// ver. atdt-1.1.0
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -46,7 +46,21 @@ class Path
       return;
     }
 
-    cout << this->name << "/\t\t\t\tTYPE\t\t   SIZE\n  │\n";
+    string TZ;
+
+    if (this->name.size() < 7) {
+      TZ = this->name + "/\t\t\t\t";
+    }
+    else if (this->name.size() < 14)
+    {
+      TZ = this->name + "/\t\t\t";
+    }
+    else 
+    {
+      TZ = this->truncate(this->name, 20) + "/\t\t";
+    }
+
+    cout << TZ << "TYPE\t\t   SIZE\n  │\n";
 
     for (auto it = this->context.begin(); it != this->context.end(); ++it) 
     {
@@ -73,9 +87,14 @@ class Path
       {
         T = "\t\t\t";
       } 
-      else 
+      else if (item[0].size() < 20) 
       {
         T = "\t\t";
+      }
+      else
+      {
+        item[0] = this->truncate(item[0], 20);
+        T = "\t";
       }
 
 
@@ -86,17 +105,18 @@ class Path
         }
       }
 
-      /*
       if (this->noColor) 
       {
         if (it == --this->context.end())
         {
-          cout << "  └ " << item[0] << ADD << T << "[" << TYPE << "]" << endl;
+          cout << "  └ " << item[0] << ADD << T << item[1] << "\t\t"; 
+          cout << item[2] << endl;
           continue;
         }
-        cout << "  ├ " << item[0] << ADD << T << "[" << TYPE << "]" << endl;
+        cout << "  ├ " << item[0] << ADD << T << item[1] << "\t\t"; 
+        cout << item[2] << endl;
         continue;
-      }*/
+      }
 
       if (it == --this->context.end())
       {
@@ -110,6 +130,16 @@ class Path
   }
 
   private:
+  string truncate(std::string str, size_t width, bool show_ellipsis=true)
+  {
+    if (str.length() > width)
+        if (show_ellipsis)
+            return str.substr(0, width) + "...";
+        else
+            return str.substr(0, width);
+    return str;
+  }
+
   string removeZeros(string s) {
     for (int i = s.size() - 1; i >= 1; i--) {
       if (s.at(i) == '0') {
@@ -184,7 +214,7 @@ class Path
       RemoveWord(this->path + "/", pathPart);
 
       if (entry.is_directory()) {
-        std::vector<string> ctx = { pathPart + "/", "DIR", "-"};
+        std::vector<string> ctx = { pathPart + "/", "DIR", "\t -"};
         this->context.push_back(ctx);
         continue;
       }
