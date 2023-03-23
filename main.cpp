@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.1.6
+// ver. dev-atdt-032320231316
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -45,58 +45,72 @@ class Path
       return;
     }
 
-    string TZ;
+    string *TZ = new string;
 
     if (this->name.size() < 7) {
-      TZ = this->name + "/\t\t\t\t";
+      *TZ = this->name + "/\t\t\t\t";
     }
     else if (this->name.size() < 14)
     {
-      TZ = this->name + "/\t\t\t";
+      *TZ = this->name + "/\t\t\t";
     }
     else 
     {
-      TZ = this->truncate(this->name, 20) + "/\t\t";
+      *TZ = this->truncate(this->name, 20) + "/\t\t";
     }
 
-    cout << TZ << "TYPE\t\t   SIZE\n  │\n";
+    cout << *TZ << "TYPE\t\t   SIZE\t\tPUSER\n  │\n";
+    
+    delete(TZ);
 
     for (auto it = this->context.begin(); it != this->context.end(); ++it) 
     {
       std::vector<string> item = *it;
+      char *mode = (char*)malloc(sizeof(char) * 9 + 1);
       const fs::path path(item[0]);
-      string ON_COLOR;
-      string ADD;
-      string T;
+      string *ON_COLOR = new string;
+      string *ADD = new string;
+      string *T = new string;
       string pa = item[0];
       struct stat st;
-      stat(pa.c_str(), &st);
+      if (stat(pa.c_str(), &st) == 0) {
+        mode_t perm = st.st_mode;
+        mode[0] = (perm & S_IRUSR) ? 'r' : '-';
+        mode[1] = (perm & S_IWUSR) ? 'w' : '-';
+        mode[2] = (perm & S_IXUSR) ? 'x' : '-';
+        mode[3] = (perm & S_IRGRP) ? 'r' : '-';
+        mode[4] = (perm & S_IWGRP) ? 'w' : '-';
+        mode[5] = (perm & S_IXGRP) ? 'x' : '-';
+        mode[6] = (perm & S_IROTH) ? 'r' : '-';
+        mode[7] = (perm & S_IWOTH) ? 'w' : '-';
+        mode[8] = (perm & S_IXOTH) ? 'x' : '-';
+      }
 
       if (fs::is_directory(path)) 
       {
-        ON_COLOR = B_COLOR;
+        *ON_COLOR = B_COLOR;
       }
       else if ((st.st_mode & S_IEXEC) != 0)
       {
-        ON_COLOR = G_COLOR;
-        ADD = "*";
+        *ON_COLOR = G_COLOR;
+        *ADD = "*";
       }
 
       if (item[0].size() < 4) {
-        T = "\t\t\t\t";
+        *T = "\t\t\t\t";
       }
       else if (item[0].size() < 12) 
       {
-        T = "\t\t\t";
+        *T = "\t\t\t";
       } 
       else if (item[0].size() < 20) 
       {
-        T = "\t\t";
+        *T = "\t\t";
       }
       else
       {
         item[0] = this->truncate(item[0], 20);
-        T = "\t";
+        *T = "\t";
       }
 
 
@@ -122,12 +136,16 @@ class Path
 
       if (it == --this->context.end())
       {
-        cout << "  └ " << ON_COLOR << item[0] << DEF_COLOR << ADD << T << item[1] << "\t\t"; 
-        cout << item[2] << endl;
+        cout << "  └ " << *ON_COLOR << item[0] << DEF_COLOR << *ADD << *T << item[1] << "\t\t"; 
+        cout << item[2] << "\t " << mode[0] << mode[1] << mode[2] << endl;
         continue;
       }
-      cout << "  ├ " << ON_COLOR << item[0] << DEF_COLOR << ADD << T << item[1] << "\t\t";
-      cout << item[2] << endl;
+      cout << "  ├ " << *ON_COLOR << item[0] << DEF_COLOR << *ADD << *T << item[1] << "\t\t";
+      cout << item[2] << "\t " << mode[0] << mode[1] << mode[2] << endl;
+      delete(mode);
+      delete(ON_COLOR);
+      delete(T);
+      delete(ADD);
     }
   }
 
