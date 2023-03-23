@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.1.4
+// ver. atdt-1.1.5
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -85,11 +85,11 @@ class Path
       if (item[0].size() < 3) {
         T = "\t\t\t\t";
       }
-      else if (item[0].size() < 11) 
+      else if (item[0].size() < 12) 
       {
         T = "\t\t\t";
       } 
-      else if (item[0].size() < 19) 
+      else if (item[0].size() < 20) 
       {
         T = "\t\t";
       }
@@ -225,7 +225,7 @@ class Path
         continue;
       }
       string size = convertSize(entry.file_size());
-      std::vector<string> ctx = {pathPart + "/", "FILE", size};
+      std::vector<string> ctx = {pathPart, "FILE", size};
       this->context.push_back(ctx);
     }
     alphaSort(this->context);
