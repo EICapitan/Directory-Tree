@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. dev-atdt-032320231452
+// ver. dev-atdt-032320231500
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -149,12 +149,12 @@ class Path
       {
         if (it == --this->context.end())
         {
-          cout << "  └ " << item[0] << ADD << T << item[1] << "\t\t"; 
-          cout << item[2] << endl;
+          cout << "  └ " << item[0] << *ADD << *T << item[1] << "\t"; 
+          cout << additional << endl;
           continue;
         }
-        cout << "  ├ " << item[0] << ADD << T << item[1] << "\t\t"; 
-        cout << item[2] << endl;
+        cout << "  ├ " << item[0] << *ADD << *T << item[1] << "\t"; 
+        cout << additional << endl;
         continue;
       }
 
