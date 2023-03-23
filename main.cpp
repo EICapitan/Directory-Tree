@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. dev-atdt-032320231500
+// ver. dev-atdt-032320231503
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -73,7 +73,7 @@ class Path
       optional += "\tPUSER\tGROUP\tOTHER";
     }
 
-    cout << *TZ << "TYPE\t" << optional << "\n  |\n";
+    cout << *TZ << "TYPE\t" << optional << "\n  │\n";
     
     delete(TZ);
 
