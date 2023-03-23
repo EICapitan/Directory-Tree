@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.1.5
+// ver. atdt-1.1.6
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -82,7 +82,7 @@ class Path
         ADD = "*";
       }
 
-      if (item[0].size() < 3) {
+      if (item[0].size() < 4) {
         T = "\t\t\t\t";
       }
       else if (item[0].size() < 12) 
