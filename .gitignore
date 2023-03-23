@@ -4,3 +4,5 @@ dtree
 CMakeCache.txt
 Makefile
 build
+.clangd
+.cache
