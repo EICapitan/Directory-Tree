@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.2.2
+// ver. atdt-1.2.3
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -43,6 +43,7 @@ class Path
   {
     string const B_COLOR = "\u001b[34;1m";
     string const G_COLOR = "\u001b[32;1m";
+    string const R_COLOR = "\u001b[31;1m";
     string const DEF_COLOR = "\u001b[39;0m";
 
     if (this->context.size() == 0) {
@@ -101,7 +102,10 @@ class Path
         mode[8] = (perm & S_IXOTH) ? 'x' : '-';
       }
 
-      if (st.st_mode & S_IFDIR)
+      if (item[1] == "SYMLINK") {
+        *ON_COLOR = R_COLOR;
+      }
+      else if (st.st_mode & S_IFDIR)
       {
         *ON_COLOR = B_COLOR;
       }
@@ -135,7 +139,7 @@ class Path
         additional += "\t" + item[2];
       }
 
-      if (this->access) {
+      if (this->access && item[1] != "SYMLINK") {
         additional = additional + "\t " + mode[0] + mode[1] + mode[2] + "\t " + mode[3] + mode[4] + mode[5] + "\t " + mode[6] + mode[7] + mode[8] ;
       }
 
@@ -271,6 +275,12 @@ class Path
         }
       }
 
+      if (entry.is_symlink()) {
+        std::vector<string> ctx = {pathPart + "@", "SYMLINK", "\t -"};
+        this->context.push_back(ctx);
+        continue;
+      }
+
       if (entry.is_directory()) {
         std::vector<string> ctx = {pathPart + "/", "DIR", "\t -"};
         this->context.push_back(ctx);
@@ -364,7 +374,7 @@ int main(int argc, char *argv[]) {
       }
     }
   }
-
+  
   Path current(currentDir, arguments);
   current.displayPath();
   return 0;
