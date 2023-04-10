@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.2.3
+// ver. atdt-1.2.4
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -308,6 +308,7 @@ int main(int argc, char *argv[]) {
   trace["-s"] = 3;
   trace["--access"] = 4;
   trace["-A"] = 4;
+  trace["--version"] = 5;
 
   for (char **pargv = argv+1; *pargv != argv[argc]; ++pargv) {
     switch (trace[*pargv])
@@ -327,6 +328,10 @@ int main(int argc, char *argv[]) {
     case 4:
       arguments[3] = true;
       break;
+
+    case 5:
+      cout << "DirectoryTree (ds) 1.2.4 [11.04.2023]\nCopyright (C) AT PROJECT Limited 2023\n" << endl;
+      return 0;
 
     default:
       if (*pargv[0] != '-') {
