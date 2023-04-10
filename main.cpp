@@ -1,5 +1,5 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.2.4
+// ver. atdt-1.2.5
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -330,7 +330,7 @@ int main(int argc, char *argv[]) {
       break;
 
     case 5:
-      cout << "DirectoryTree (ds) 1.2.4 [11.04.2023]\nCopyright (C) AT PROJECT Limited 2023\n" << endl;
+      cout << "DirectoryTree (ds) 1.2.5 [11.04.2023]\nCopyright (C) AT PROJECT Limited 2023\n" << endl;
       return 0;
 
     default:

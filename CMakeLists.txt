@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
-project(dtree)
+project(ds)
 
-add_executable(dtree main.cpp)
+add_executable(ds main.cpp)
+install(TARGETS ds DESTINATION /bin)
