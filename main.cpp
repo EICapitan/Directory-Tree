@@ -1,23 +1,21 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.2.5
+// ver. atdt-1.2.6
+#include <bits/stdc++.h>
 #include <filesystem>
 #include <iostream>
-#include <string>
-#include <vector>
-#include <sys/stat.h>
 #include <map>
-#include <bits/stdc++.h>
+#include <string>
+#include <sys/stat.h>
+#include <vector>
 
 namespace fs = std::filesystem;
 
-using std::cin;
 using std::cout;
 using std::endl;
 using std::string;
 
-class Path
-{
-  public:
+class Path {
+public:
   string name;
   string path;
   bool all;
@@ -39,8 +37,7 @@ class Path
     getContext(path);
   }
 
-  void displayPath()
-  {
+  void displayPath() {
     string const B_COLOR = "\u001b[34;1m";
     string const G_COLOR = "\u001b[32;1m";
     string const R_COLOR = "\u001b[31;1m";
@@ -54,13 +51,9 @@ class Path
 
     if (this->name.size() < 7) {
       *TZ = this->name + "/\t\t\t\t";
-    }
-    else if (this->name.size() < 14)
-    {
+    } else if (this->name.size() < 14) {
       *TZ = this->name + "/\t\t\t";
-    }
-    else
-    {
+    } else {
       *TZ = this->truncate(this->name, 20) + "/\t\t";
     }
 
@@ -76,12 +69,11 @@ class Path
 
     cout << *TZ << "TYPE\t" << optional << "\n  │\n";
 
-    delete(TZ);
+    delete (TZ);
 
-    for (auto it = this->context.begin(); it != this->context.end(); ++it)
-    {
+    for (auto it = this->context.begin(); it != this->context.end(); ++it) {
       std::vector<string> item = *it;
-      char *mode = (char*)malloc(sizeof(char) * 9 + 1);
+      char *mode = (char *)malloc(sizeof(char) * 9 + 1);
       const fs::path path(item[0]);
       string *ON_COLOR = new string;
       string *ADD = new string;
@@ -104,13 +96,9 @@ class Path
 
       if (item[1] == "SYMLINK") {
         *ON_COLOR = R_COLOR;
-      }
-      else if (st.st_mode & S_IFDIR)
-      {
+      } else if (st.st_mode & S_IFDIR) {
         *ON_COLOR = B_COLOR;
-      }
-      else if ((st.st_mode & S_IEXEC) != 0)
-      {
+      } else if ((st.st_mode & S_IEXEC) != 0) {
         *ON_COLOR = G_COLOR;
         *ADD = "*";
         ad = 1;
@@ -118,17 +106,11 @@ class Path
 
       if (item[0].size() + ad < 4) {
         *T = "\t\t\t\t";
-      }
-      else if (item[0].size() + ad < 12)
-      {
+      } else if (item[0].size() + ad < 12) {
         *T = "\t\t\t";
-      }
-      else if (item[0].size() + ad < 20)
-      {
+      } else if (item[0].size() + ad < 20) {
         *T = "\t\t";
-      }
-      else
-      {
+      } else {
         item[0] = this->truncate(item[0], 20);
         *T = "\t";
       }
@@ -140,13 +122,13 @@ class Path
       }
 
       if (this->access && item[1] != "SYMLINK") {
-        additional = additional + "\t " + mode[0] + mode[1] + mode[2] + "\t " + mode[3] + mode[4] + mode[5] + "\t " + mode[6] + mode[7] + mode[8] ;
+        additional = additional + "\t " + mode[0] + mode[1] + mode[2] + "\t " +
+                     mode[3] + mode[4] + mode[5] + "\t " + mode[6] + mode[7] +
+                     mode[8];
       }
 
-      if (this->noColor)
-      {
-        if (it == --this->context.end())
-        {
+      if (this->noColor) {
+        if (it == --this->context.end()) {
           cout << "  └ " << item[0] << *ADD << *T << item[1] << "\t";
           cout << additional << endl;
           continue;
@@ -156,33 +138,31 @@ class Path
         continue;
       }
 
-      if (it == --this->context.end())
-      {
-        cout << "  └ " << *ON_COLOR << item[0] << DEF_COLOR << *ADD << *T << item[1] << "\t";
+      if (it == --this->context.end()) {
+        cout << "  └ " << *ON_COLOR << item[0] << DEF_COLOR << *ADD << *T
+             << item[1] << "\t";
         cout << additional << endl;
         continue;
       }
-      cout << "  ├ " << *ON_COLOR << item[0] << DEF_COLOR << *ADD << *T << item[1] << "\t";
+      cout << "  ├ " << *ON_COLOR << item[0] << DEF_COLOR << *ADD << *T
+           << item[1] << "\t";
       cout << additional << endl;
 
-      delete(mode);
-      delete(ON_COLOR);
-      delete(T);
-      delete(ADD);
+      delete (mode);
+      delete (ON_COLOR);
+      delete (T);
+      delete (ADD);
     }
   }
 
-  private:
+private:
   string fullSize;
 
-  string truncate(std::string str, size_t width, bool show_ellipsis=true)
-  {
+  string truncate(std::string str, size_t width, bool show_ellipsis = true) {
     if (str.length() > width) {
       if (show_ellipsis) {
-          return str.substr(0, width) + "...";
-      }
-      else
-      {
+        return str.substr(0, width) + "...";
+      } else {
         return str.substr(0, width);
       }
     }
@@ -194,10 +174,10 @@ class Path
       if (s.at(i) == '0') {
         s.pop_back();
       } else if (s.at(i) == '.') {
-          s.pop_back();
-          break;
+        s.pop_back();
+        break;
       } else {
-          break;
+        break;
       }
     }
     return s;
@@ -211,14 +191,14 @@ class Path
   }
 
   string convertSize(size_t size, bool t = true) {
-    static const char *SIZES[] = { " B", "KB", "MB", "GB" };
+    static const char *SIZES[] = {" B", "KB", "MB", "GB"};
     int div = 0;
     size_t rem = 0;
 
     while (size >= 1024 && div < (sizeof SIZES / sizeof *SIZES)) {
-        rem = (size % 1024);
-        div++;
-        size /= 1024;
+      rem = (size % 1024);
+      div++;
+      size /= 1024;
     }
 
     double size_d = (float)size + (float)rem / 1024.0;
@@ -236,35 +216,31 @@ class Path
     struct stat results;
 
     if (stat(path, &results) == 0) {
-        return results.st_size;
+      return results.st_size;
     } else {
-        return -1;
+      return -1;
     }
   }
 
-  static bool mycomp(std::vector<string> a, std::vector<string> b){
-	  return a[0]<b[0];
+  static bool mycomp(std::vector<string> a, std::vector<string> b) {
+    return a[0] < b[0];
   }
 
-  static void alphaSort(std::vector<std::vector<string>> &a){
-    sort(a.begin(),a.end(),mycomp);
+  static void alphaSort(std::vector<std::vector<string>> &a) {
+    sort(a.begin(), a.end(), mycomp);
   }
 
-  static void RemoveWord(string word, string &line)
-  {
+  static void RemoveWord(string word, string &line) {
     auto n = line.find(word);
 
-    if (n != std::string::npos)
-    {
+    if (n != std::string::npos) {
       line.erase(n, word.length());
     }
   }
 
-  void getContext(string path)
-  {
+  void getContext(string path) {
     size_t fsize = 0;
-    for (const auto & entry : fs::directory_iterator(path))
-    {
+    for (const auto &entry : fs::directory_iterator(path)) {
       string pathPart = entry.path();
 
       RemoveWord(this->path + "/", pathPart);
@@ -298,7 +274,7 @@ class Path
 
 int main(int argc, char *argv[]) {
   string currentDir = fs::current_path();
-  bool arguments[] = { false, false, false, false };
+  bool arguments[] = {false, false, false, false};
   std::map<string, int> trace;
   trace["--all"] = 1;
   trace["-a"] = 1;
@@ -309,10 +285,10 @@ int main(int argc, char *argv[]) {
   trace["--access"] = 4;
   trace["-A"] = 4;
   trace["--version"] = 5;
+  trace["--help"] = 6;
 
-  for (char **pargv = argv+1; *pargv != argv[argc]; ++pargv) {
-    switch (trace[*pargv])
-    {
+  for (char **pargv = argv + 1; *pargv != argv[argc]; ++pargv) {
+    switch (trace[*pargv]) {
     case 1:
       arguments[0] = true;
       break;
@@ -330,7 +306,13 @@ int main(int argc, char *argv[]) {
       break;
 
     case 5:
-      cout << "DirectoryTree (ds) 1.2.5 [11.04.2023]\nCopyright (C) AT PROJECT Limited 2023\n" << endl;
+      cout << "DirectoryTree (ds) 1.2.5 [11.04.2023]\nCopyright (C) AT PROJECT "
+              "Limited 2023\n"
+           << endl;
+      return 0;
+
+    case 6:
+      system("man ds");
       return 0;
 
     default:
@@ -344,8 +326,8 @@ int main(int argc, char *argv[]) {
           }
 
           if (currentDir.back() == '/' and currentDir.length() > 1) {
-              currentDir.pop_back();
-            }
+            currentDir.pop_back();
+          }
         } catch (string err) {
           cout << "Folder can't be opened. Error: " << err << endl;
           return 0;
@@ -356,10 +338,9 @@ int main(int argc, char *argv[]) {
 
       string argm = *pargv;
 
-      for (auto x: argm) {
-        string arg (1, x);
-        switch (trace["-" + arg])
-        {
+      for (auto x : argm) {
+        string arg(1, x);
+        switch (trace["-" + arg]) {
         case 1:
           arguments[0] = true;
           break;
@@ -379,7 +360,7 @@ int main(int argc, char *argv[]) {
       }
     }
   }
-  
+
   Path current(currentDir, arguments);
   current.displayPath();
   return 0;
