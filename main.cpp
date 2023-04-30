@@ -1,5 +1,4 @@
 // by ElCapitan; AT PROJECT Limited
-// ver. atdt-1.2.6
 #include <bits/stdc++.h>
 #include <filesystem>
 #include <iostream>
@@ -273,6 +272,8 @@ private:
 };
 
 int main(int argc, char *argv[]) {
+  const string VERSION= "atdt-v1.2.6_2";
+  const string DATE = "[30.04.2023]";
   string currentDir = fs::current_path();
   bool arguments[] = {false, false, false, false};
   std::map<string, int> trace;
@@ -306,7 +307,7 @@ int main(int argc, char *argv[]) {
       break;
 
     case 5:
-      cout << "DirectoryTree (ds) 1.2.5 [11.04.2023]\nCopyright (C) AT PROJECT "
+      cout << "DirectoryTree (ds) " << VERSION << " " << DATE << " \nCopyright (C) AT PROJECT "
               "Limited 2023\n"
            << endl;
       return 0;
