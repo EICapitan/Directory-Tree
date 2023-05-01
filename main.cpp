@@ -272,7 +272,7 @@ private:
 };
 
 int main(int argc, char *argv[]) {
-  const string VERSION= "atdt-v1.2.6_3";
+  const string VERSION= "atdt-v1.2.6_4";
   string currentDir = fs::current_path();
   bool arguments[] = {false, false, false, false};
   std::map<string, int> trace;

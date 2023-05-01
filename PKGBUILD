@@ -2,11 +2,11 @@
 # by ElCapitan
 pkgname=ds
 _gitname="Directory-Tree-atdt-"
-pkgver=v1.2.6_3
+pkgver=v1.2.6_4
 pkgrel=1
 arch=('x86_64')
 license=('GPL3')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/EICapitan/Directory-Tree/archive/refs/tags/atdt-v1.2.6_3.tar.gz")
+source=("$pkgname-$pkgver.tar.gz::https://github.com/EICapitan/Directory-Tree/archive/refs/tags/atdt-$pkgver.tar.gz")
 sha256sums=('SKIP')
 
 build() {
