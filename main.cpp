@@ -1,4 +1,4 @@
-// by ElCapitan; AT PROJECT Limited
+// by ElCapitan; AT PROJECT Limited`
 #include <bits/stdc++.h>
 #include <filesystem>
 #include <iostream>
@@ -273,7 +273,6 @@ private:
 
 int main(int argc, char *argv[]) {
   const string VERSION= "atdt-v1.2.6_2";
-  const string DATE = "[30.04.2023]";
   string currentDir = fs::current_path();
   bool arguments[] = {false, false, false, false};
   std::map<string, int> trace;
@@ -307,7 +306,7 @@ int main(int argc, char *argv[]) {
       break;
 
     case 5:
-      cout << "DirectoryTree (ds) " << VERSION << " " << DATE << " \nCopyright (C) AT PROJECT "
+      cout << "DirectoryTree (ds) " << VERSION << " \nCopyright (C) AT PROJECT "
               "Limited 2023\n"
            << endl;
       return 0;
