@@ -1,8 +1,8 @@
 # AT PROJECT Limited 2023
 # by ElCapitan
 pkgname=ds
-_gitname="Directory-Tree-atdt-"
-pkgver=v1.2.6_4
+_gitname="Directory-diSplay-atdt-"
+pkgver=v1.2.7
 pkgrel=1
 arch=('x86_64')
 license=('GPL3')
@@ -17,6 +17,7 @@ build() {
 
 package() {
     cd "$_gitname$pkgver"
-    msg2 $pkgdir
     make DESTDIR="$pkgdir/" install
+    mkdir -p "$pkgdir/usr/share/man/man1"
+    install -g 0 -o 0 -m 0644 ds.1 "/usr/share/man/man1/"
 }
