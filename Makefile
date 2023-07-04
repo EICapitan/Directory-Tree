@@ -7,8 +7,8 @@ MANPAGE_NAME=ds.1
 SOURCE_DIR=src/
 BUILD_DIR=build/
 
-INSTALL_DIR=/usr/local/bin/
-MANPAGE_DIR=/usr/share/man/man1/
+INSTALL_DIR=usr/local/bin/
+MANPAGE_DIR=usr/share/man/man1/
 
 all : main.o
 	$(CXX) -o $(BUILD_DIR)$(TARGET_NAME) $(BUILD_DIR)$^

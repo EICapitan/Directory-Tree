@@ -11,12 +11,14 @@ sha256sums=('SKIP')
 
 build() {
     cd "$_gitname"
-    dir
     make
 }
 
 package() {
-    cd "_gitname"
-    dir
-    make install
+    cd $_gitname
+    mkdir -p $pkgdir/usr/local/bin
+    mkdir -p $pkgdir/usr/share/man/man1
+
+    cp build/$pkgname $pkgdir/usr/local/bin
+    cp src/ds.1 $pkgdir/usr/share/man/man1/ds.1
 }
