@@ -1,4 +1,4 @@
-// by ElCapitan; AT PROJECT Limited`
+// by ElCapitan
 #include <bits/stdc++.h>
 #include <filesystem>
 #include <iostream>
@@ -307,7 +307,11 @@ int main(int argc, char *argv[]) {
 
     case 5:
       cout << "Directory diSplay (ds) " << VERSION << " \nCopyright (C) AT PROJECT "
-              "Limited 2023\n"
+              "Limited 2023\n" <<
+              "License GPLv3: GNU GPL verson 3 https://www.gnu.org/licenses/gpl-3.0.html\n" <<
+              "This is free software: you are free to change and redistribute it.\n" <<
+              "There is NO WARRANTY, to the extent permitted by law.\n\n" <<
+              "Written by Vladislav 'ElCapitan' Nazatov"
            << endl;
       return 0;
 

@@ -11,13 +11,9 @@ sha256sums=('SKIP')
 
 build() {
     cd "$_gitname"
-    cmake .
     make
 }
 
-package() {
-    cd "$_gitname"
-    make DESTDIR="$pkgdir/" install
-    mkdir -p "$pkgdir/usr/share/man/man1"
-    install -g 0 -o 0 -m 0644 ds.1 "$pkgdir/usr/share/man/man1/"
+install() {
+    make install
 }
