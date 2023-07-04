@@ -11,9 +11,12 @@ sha256sums=('SKIP')
 
 build() {
     cd "$_gitname"
+    dir
     make
 }
 
-install() {
+package() {
+    cd "_gitname"
+    dir
     make install
 }
