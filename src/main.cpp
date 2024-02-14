@@ -7,6 +7,8 @@
 #include <sys/stat.h>
 #include <vector>
 
+#define VERSION "atdt-v1.2.8"
+
 namespace fs = std::filesystem;
 
 using std::cout;
@@ -272,7 +274,6 @@ private:
 };
 
 int main(int argc, char *argv[]) {
-  const string VERSION= "atdt-v1.2.7";
   string currentDir = fs::current_path();
   bool arguments[] = {false, false, false, false};
   std::map<string, int> trace;
@@ -306,13 +307,15 @@ int main(int argc, char *argv[]) {
       break;
 
     case 5:
-      cout << "Directory diSplay (ds) " << VERSION << " \nCopyright (C) AT PROJECT "
-              "Limited 2023\n" <<
-              "License GPLv3: GNU GPL verson 3 https://www.gnu.org/licenses/gpl-3.0.html\n" <<
-              "This is free software: you are free to change and redistribute it.\n" <<
-              "There is NO WARRANTY, to the extent permitted by law.\n\n" <<
-              "Written by Vladislav 'ElCapitan' Nazatov"
-           << endl;
+      cout << "Directory diSplay (ds) " << VERSION
+           << " \nCopyright (C) AT PROJECT "
+              "Limited 2023\n"
+           << "License GPLv3: GNU GPL verson 3 "
+              "https://www.gnu.org/licenses/gpl-3.0.html\n"
+           << "This is free software: you are free to change and redistribute "
+              "it.\n"
+           << "There is NO WARRANTY, to the extent permitted by law.\n\n"
+           << "Written by Vladislav 'ElCapitan' Nazatov" << endl;
       return 0;
 
     case 6:
