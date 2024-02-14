@@ -7,3 +7,5 @@ build
 .cache
 install_manifest.txt
 ds
+.autox
+.vscode
