@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 CMakeFiles
 cmake_install.cmake
 dtree
@@ -9,3 +10,6 @@ install_manifest.txt
 ds
 .autox
 .vscode
+=======
+/target
+>>>>>>> 90b09e7 (update .gitignore)
