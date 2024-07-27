@@ -85,12 +85,12 @@ fn main() -> std::io::Result<()> {
                         Ok(file_type) => {
                             if file_type.is_dir() {
                                 String::from("DIR")
-                            } else if file_type.is_file() {
-                                String::from("FILE")
                             } else if file_type.is_file()
                                 && data.metadata()?.permissions().mode() & 0o111 != 0
                             {
                                 String::from("EXEC")
+                            } else if file_type.is_file() {
+                                String::from("FILE")
                             } else if file_type.is_symlink() {
                                 String::from("SYMLINK")
                             } else if file_type.is_block_device() {
