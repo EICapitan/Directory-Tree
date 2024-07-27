@@ -13,7 +13,7 @@ const MASK_ACCESS: i8 = 1 << 3;
 const MASK_FULL_NAME: i8 = 1 << 4;
 
 fn display_help() {
-    println!("Usage: ds [OPTION]");
+    println!("Usage: ds [OPTION] [DIRECTORY]");
     println!();
     println!("Display directory contents");
     println!();
@@ -263,4 +263,3 @@ fn main() -> std::io::Result<()> {
 
     Ok(())
 }
-
