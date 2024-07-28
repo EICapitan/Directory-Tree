@@ -3,7 +3,7 @@
 pkgname=ds
 _gitname="Directory-diSplay"
 pkgver=v2.0.0
-pkgrel=3
+pkgrel=4
 arch=('x86_64')
 license=('GPL3')
 source=("git+https://github.com/at-elcapitan/Directory-diSplay.git")

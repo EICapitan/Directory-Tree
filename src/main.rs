@@ -22,16 +22,33 @@ fn display_help() {
     println!("  -a, --all             display all directory content");
     println!("  -s, --size            display files size");
     println!("  -f, --full-name       disable file name shortening");
-    println!("  -A, --access          display access options (not impl)");
+    println!("  -A, --access          display access options");
     println!("      --version         display current program version");
     println!("      --help            display this message)");
     println!();
     println!("Directory diSplay home page: <https://github.com/at-elcapitan/Directory-diSplay>");
 }
 
+fn format_size(size: u64) -> (f64, String) {
+    let size = size as f64;
+    const KIB: f64 = 1024.0;
+    const MIB: f64 = 1024.0 * KIB;
+    const GIB: f64 = 1024.0 * MIB;
+
+    if size < KIB {
+        (size, " B".to_string())
+    } else if size < MIB {
+        (size / KIB, "KB".to_string())
+    } else if size < GIB {
+        (size / MIB, "MB".to_string())
+    } else {
+        (size / GIB, "GB".to_string())
+    }
+}
+
 fn main() -> std::io::Result<()> {
     let mut args: Vec<String> = env::args().collect();
-    let mut dir_objects: Vec<(String, String, u64)> = Vec::new();
+    let mut dir_objects: Vec<(String, String, u64, u32)> = Vec::new();
     let mut max_length: usize = 0;
     let mut flags: i8 = 0;
     let mut dir_arg: String = String::new();
@@ -45,7 +62,7 @@ fn main() -> std::io::Result<()> {
                 return Ok(());
             }
             "--version" => {
-                println!("ds (Directory diSplay) 2.0.0-beta.3");
+                println!("ds (Directory diSplay) 2.0.0-rc.1 RELEASE CANDIDATE");
                 println!();
                 println!(
                     "This is free software; see the source for copying conditions. There is NO"
@@ -146,6 +163,7 @@ fn main() -> std::io::Result<()> {
                     }
 
                     let length = filename.len();
+                    let fmode = data.metadata()?.permissions().mode();
 
                     let filetype = match data.file_type() {
                         Ok(file_type) => {
@@ -192,7 +210,7 @@ fn main() -> std::io::Result<()> {
                             filename.push('/')
                         }
                         max_length = 40;
-                        dir_objects.push((filename, filetype, size));
+                        dir_objects.push((filename, filetype, size, fmode));
                         continue;
                     }
 
@@ -205,7 +223,7 @@ fn main() -> std::io::Result<()> {
                     if filetype == "DIR" {
                         filename.push('/')
                     }
-                    dir_objects.push((filename, filetype, size))
+                    dir_objects.push((filename, filetype, size, fmode))
                 }
                 Err(err) => panic!("Unexpected error {err}"),
             }
@@ -217,7 +235,11 @@ fn main() -> std::io::Result<()> {
     let mut additional: String = String::new();
 
     if flags & MASK_SIZE != 0 {
-        additional.push_str("\t\t  SIZE")
+        additional.push_str("   SIZE\t\t")
+    }
+
+    if flags & MASK_ACCESS != 0 {
+        additional.push_str("PUSER\tGROUP\tOTHER")
     }
 
     if let Some(dir_name) = current_dir.file_name() {
@@ -231,7 +253,7 @@ fn main() -> std::io::Result<()> {
 
         let spaces = max_length + 7 - dir_name_len;
         println!(
-            "{}/{}\tTYPE{}",
+            "{}/{}\tTYPE\t\t{}",
             dir_name.to_string_lossy(),
             " ".repeat(spaces),
             additional
@@ -244,7 +266,7 @@ fn main() -> std::io::Result<()> {
     let mut total_size: u64 = 0;
 
     for (i, obj) in dir_objects.iter().enumerate() {
-        let (name, obj_type, size) = obj;
+        let (name, obj_type, size, mode) = obj;
 
         let color = match obj_type.as_str() {
             "DIR" => "\x1b[34;1m",
@@ -257,17 +279,38 @@ fn main() -> std::io::Result<()> {
         let mut flags_data = String::new();
 
         if flags & MASK_SIZE != 0 && (obj_type == "FILE" || obj_type == "EXEC") {
-            flags_data.push_str("\t\t");
             total_size += size;
-            flags_data.push_str(size.to_string().as_str());
-            flags_data.push_str("\tB")
+            let (fsize, val_type) = format_size(*size);
+            flags_data.push_str(&format!("{:.2}\t{}\t", fsize, val_type.as_str()));
         } else if flags & MASK_SIZE != 0 {
-            flags_data.push_str("\t\t\t-")
+            flags_data.push_str("\t -\t")
+        }
+
+        if flags & MASK_ACCESS != 0 {
+            // Owner permissions
+            flags_data.push(' ');
+            flags_data.push(if mode & 0o400 != 0 { 'r' } else { '-' });
+            flags_data.push(if mode & 0o200 != 0 { 'w' } else { '-' });
+            flags_data.push(if mode & 0o100 != 0 { 'x' } else { '-' });
+            flags_data.push('\t');
+
+            // Group permissions
+            flags_data.push(' ');
+            flags_data.push(if mode & 0o040 != 0 { 'r' } else { '-' });
+            flags_data.push(if mode & 0o020 != 0 { 'w' } else { '-' });
+            flags_data.push(if mode & 0o010 != 0 { 'x' } else { '-' });
+            flags_data.push('\t');
+
+            // Others permissions
+            flags_data.push(' ');
+            flags_data.push(if mode & 0o004 != 0 { 'r' } else { '-' });
+            flags_data.push(if mode & 0o002 != 0 { 'w' } else { '-' });
+            flags_data.push(if mode & 0o001 != 0 { 'x' } else { '-' });
         }
 
         if i == dir_objects.len() - 1 {
             println!(
-                "  └ {color}{:<width$}\x1b[0m\t{}{flags_data}",
+                "  └ {color}{:<width$}\x1b[0m\t{}\t\t{flags_data}",
                 name,
                 obj_type,
                 width = max_length + 4
@@ -275,7 +318,7 @@ fn main() -> std::io::Result<()> {
             break;
         }
         println!(
-            "  ├ {color}{:<width$}\x1b[0m\t{}{flags_data}",
+            "  ├ {color}{:<width$}\x1b[0m\t{}\t\t{flags_data}",
             name,
             obj_type,
             width = max_length + 4
@@ -283,7 +326,8 @@ fn main() -> std::io::Result<()> {
     }
 
     if flags & MASK_SIZE != 0 {
-        println!("Total size: {}\tB", total_size);
+        let (total_size, dtype) = format_size(total_size);
+        println!("Total size: {:.2} {}", total_size, dtype);
     }
 
     Ok(())
