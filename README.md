@@ -36,8 +36,23 @@ ds [OPTION] [DIRECTORY]
 
 ### Example
 
-To display the current directory structure with all details and file sizes:
+Just displaying directory tree:
 
 ```sh
-ds -as
+ds
 ```
+![image](https://github.com/user-attachments/assets/49404764-3adc-478f-b0e4-3e2dd14f1f21)
+
+Displaying directory tree with file sizes and full names:
+
+```sh
+ds -sf
+```
+
+or
+
+```sh
+ds --size --full-name
+```
+![image](https://github.com/user-attachments/assets/c5418248-031d-465b-bda3-7c7c6f543a4a)
+
