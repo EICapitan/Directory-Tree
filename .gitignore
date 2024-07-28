@@ -10,6 +10,9 @@ install_manifest.txt
 ds
 .autox
 .vscode
+Directory-diSplay/
+pkg
+*.zst
 =======
 /target
 >>>>>>> 90b09e7 (update .gitignore)
