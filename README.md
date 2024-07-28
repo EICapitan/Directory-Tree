@@ -28,7 +28,7 @@ ds [OPTION] [DIRECTORY]
 ### Options
 
 - `-а, --all`          : Display all directory content
-- `-f, --full-names`   : Disable file name shortening
+- `-f, --full-name`    : Disable file name shortening
 - `-s, --size`         : Display file sizes
 - `-A, --access`       : Display access options
 - `--version`          : Display current program version
