@@ -1,4 +1,5 @@
-use std::path::PathBuf;
+use std::fs;
+use std::path::{Path, PathBuf};
 use std::{
     env::{self},
     os::{
@@ -62,6 +63,22 @@ fn main() -> std::io::Result<()> {
             "--full-name" => flags = flags | MASK_FULL_NAME,
             &_ => {
                 if !arg.starts_with("-") {
+                    let path = Path::new(arg.as_str());
+                    if !path.exists() {
+                        println!("Cannot access: no such file or directory");
+                        return Ok(());
+                    }
+
+                    if path.is_file() {
+                        println!("{} is not a directory", arg.as_str());
+                        return Ok(());
+                    }
+
+                    if !fs::File::open(arg.as_str()).is_ok() {
+                        println!("Cannot access: Permission Denied");
+                        return Ok(());
+                    }
+
                     dir_arg = arg.clone();
                     continue;
                 }
@@ -123,6 +140,11 @@ fn main() -> std::io::Result<()> {
                         .file_name()
                         .into_string()
                         .expect("Error while converting OsString to String");
+
+                    if filename.starts_with('.') && flags & MASK_ALL == 0 {
+                        continue;
+                    }
+
                     let length = filename.len();
 
                     let filetype = match data.file_type() {
@@ -157,7 +179,14 @@ fn main() -> std::io::Result<()> {
                     };
 
                     if flags & MASK_FULL_NAME == 0 && length > 40 {
-                        filename.truncate(38);
+                        filename.truncate(
+                            filename
+                                .char_indices()
+                                .take_while(|(i, _)| *i <= 38)
+                                .last()
+                                .map(|(i, _)| i)
+                                .unwrap_or(0),
+                        );
                         filename.push_str("..");
                         if filetype == "DIR" {
                             filename.push('/')
@@ -216,10 +245,6 @@ fn main() -> std::io::Result<()> {
 
     for (i, obj) in dir_objects.iter().enumerate() {
         let (name, obj_type, size) = obj;
-
-        if name.starts_with('.') && flags & MASK_ALL == 0 {
-            continue;
-        }
 
         let color = match obj_type.as_str() {
             "DIR" => "\x1b[34;1m",
