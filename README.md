@@ -27,12 +27,12 @@ ds [OPTION] [DIRECTORY]
 
 ### Options
 
-- `-a, --all`        : Display all directory content
-- `-n, --no-color`   : Disable color
-- `-s, --size`       : Display file sizes
-- `-A, --access`     : Display access options
-- `--version`        : Display current program version
-- `--help`           : Display help message
+- `-а, --all`          : Display all directory content
+- `-f, --full-version` : Disable file name shortening
+- `-s, --size`         : Display file sizes
+- `-A, --access`       : Display access options
+- `--version`          : Display current program version
+- `--help`             : Display help message
 
 ### Example
 
