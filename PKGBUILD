@@ -6,6 +6,7 @@ pkgver=v2.0.0
 pkgrel=4
 arch=('x86_64')
 license=('GPL3')
+depends=('gcc-libs' 'glibc')
 source=("git+https://github.com/at-elcapitan/Directory-diSplay.git")
 sha256sums=('SKIP')
 
