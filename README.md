@@ -1,7 +1,7 @@
 
 # Directory-diSplay (DS)
 
-Simple directory tree display application, created to make it easier to get information about a folder.
+A simple directory tree display application was created to make getting information about a folder easier.
 
 DS as the package is in the arch repository: [raw.githubusercontent.com](https://raw.githubusercontent.com/EICapitan/at-repository/master/x86_64/)
 
@@ -15,7 +15,7 @@ makepkg -i
 
 ### Description
 
-Directory-diSplay (DS) is a simple yet powerful command-line application designed to display the current directory structure. It provides various options to customize the output, such as displaying file sizes, access options, and disabling color for easier readability in different terminal environments.
+Directory-diSplay (DS) is a simple yet powerful command-line application that displays the current directory structure. It provides various options to customize the output, such as displaying file sizes, and access options for easier readability in different terminal environments.
 
 ### Usage
 
@@ -28,7 +28,7 @@ ds [OPTION] [DIRECTORY]
 ### Options
 
 - `-а, --all`          : Display all directory content
-- `-f, --full-version` : Disable file name shortening
+- `-f, --full-names`   : Disable file name shortening
 - `-s, --size`         : Display file sizes
 - `-A, --access`       : Display access options
 - `--version`          : Display current program version
