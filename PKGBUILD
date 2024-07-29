@@ -3,7 +3,7 @@
 pkgname=ds
 _gitname="Directory-diSplay"
 pkgver=v2.0.0
-pkgrel=4
+pkgrel=5
 arch=('x86_64')
 license=('GPL3')
 depends=('gcc-libs' 'glibc')

@@ -62,7 +62,7 @@ fn main() -> std::io::Result<()> {
                 return Ok(());
             }
             "--version" => {
-                println!("ds (Directory diSplay) 2.0.0-rc.1 RELEASE CANDIDATE");
+                println!("ds (Directory diSplay) 2.0.0");
                 println!();
                 println!(
                     "This is free software; see the source for copying conditions. There is NO"
